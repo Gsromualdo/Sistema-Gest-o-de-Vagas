@@ -1,0 +1,55 @@
+### SEU CONTEÚDO ORIGINAL (Mantido) ###
+HELP.md
+target/
+.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+### --- NOVAS ADIÇÕES --- ###
+
+# Segurança: O arquivo de propriedades onde ficam suas senhas e Secret JWT
+src/main/resources/application.properties
+.env
+.env.local
+
+# Banco de Dados (DOCKER): Ignora os arquivos físicos do banco que o Docker cria
+# (Não ignora o docker-compose.yml, apenas a pasta de dados se você criar uma)
+pgdata/
+/data/
+
+# Logs e Temporários
+*.log
+/logs
+temp/
+
+# Sistema Operacional
+.DS_Store
+Thumbs.db

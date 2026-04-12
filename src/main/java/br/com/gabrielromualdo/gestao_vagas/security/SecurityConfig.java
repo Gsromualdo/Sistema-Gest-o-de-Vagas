@@ -1,0 +1,46 @@
+package br.com.gabrielromualdo.gestao_vagas.security;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+//Reposnsavel para estabelecer as configurações de segurança
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+@Configuration
+@EnableMethodSecurity
+public class SecurityConfig {
+    
+    @Autowired
+    private SecurityFilter securityFilter;
+    
+    @Autowired
+    private SecurityCandidateFilter securityCandidateFilter;
+
+
+    //indicar que um metodo dentro da classe configuration esta sendo utilizado para definir algum objeto ja gerenciado pelo spring
+    @Bean
+    SecurityFilterChain securityFilterChain(HttpSecurity http) {
+        http.csrf(csrf -> csrf.disable())
+        .authorizeHttpRequests(auth ->{
+            auth.requestMatchers("/candidate/").permitAll()
+            .requestMatchers("/company/").permitAll()
+            .requestMatchers("/company/auth").permitAll()
+            .requestMatchers("/candidate/auth").permitAll();
+            auth.anyRequest().authenticated();
+        })
+        .addFilterBefore(securityCandidateFilter, BasicAuthenticationFilter.class)
+        .addFilterBefore(securityFilter, BasicAuthenticationFilter.class);
+        
+        
+        return http.build();
+    }
+    
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+}
