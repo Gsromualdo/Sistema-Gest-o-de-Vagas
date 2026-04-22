@@ -16,6 +16,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+
 @Component
 public class SecurityCandidateFilter extends OncePerRequestFilter {
 
@@ -23,7 +24,7 @@ public class SecurityCandidateFilter extends OncePerRequestFilter {
     private JWTCandidateProvider jwtCandidateProvider;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+    protected void doFilterInternal( HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
         //SecurityContextHolder.getContext().setAuthentication(null);

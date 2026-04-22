@@ -2,7 +2,6 @@ package br.com.gabrielromualdo.gestao_vagas.security;
 
 import br.com.gabrielromualdo.gestao_vagas.providers.JWTProvider;
 import java.io.IOException;
-import java.util.Collections;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

@@ -21,15 +21,23 @@ public class SecurityConfig {
     private SecurityCandidateFilter securityCandidateFilter;
 
 
+    private static final String[] SWAGGER_LIST = {
+        "/v3/api-docs/**",
+        "/swagger-ui/**",
+        "/swagger-ui.html"
+
+     };
+
     //indicar que um metodo dentro da classe configuration esta sendo utilizado para definir algum objeto ja gerenciado pelo spring
     @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity http) {
+    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
         .authorizeHttpRequests(auth ->{
             auth.requestMatchers("/candidate/").permitAll()
             .requestMatchers("/company/").permitAll()
             .requestMatchers("/company/auth").permitAll()
-            .requestMatchers("/candidate/auth").permitAll();
+            .requestMatchers("/candidate/auth").permitAll()
+            .requestMatchers(SWAGGER_LIST).permitAll();
             auth.anyRequest().authenticated();
         })
         .addFilterBefore(securityCandidateFilter, BasicAuthenticationFilter.class)

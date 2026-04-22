@@ -1,5 +1,6 @@
 package br.com.gabrielromualdo.gestao_vagas.modules.candidate.useCases;
 
+import java.util.Objects;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import br.com.gabrielromualdo.gestao_vagas.modules.candidate.CandidateRepository;
 import br.com.gabrielromualdo.gestao_vagas.modules.candidate.dto.ProfileCandidateResponseDTO;
 
+
 @Service
 public class ProfileCandidateUseCase {
     
@@ -17,7 +19,8 @@ public class ProfileCandidateUseCase {
 
 
     public ProfileCandidateResponseDTO execute(UUID idCandidate) {
-        var candidate = this.candidateRepository.findById(idCandidate)
+        Objects.requireNonNull(idCandidate, "ID do candidato não pode ser nulo");
+        var candidate = this.candidateRepository.findById( idCandidate)
         .orElseThrow(() -> {
             throw new UsernameNotFoundException("User not found");
         });
