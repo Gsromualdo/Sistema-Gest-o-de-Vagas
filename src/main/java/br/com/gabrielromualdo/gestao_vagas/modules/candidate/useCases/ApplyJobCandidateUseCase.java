@@ -3,6 +3,7 @@ package br.com.gabrielromualdo.gestao_vagas.modules.candidate.useCases;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import br.com.gabrielromualdo.gestao_vagas.exceptions.JobNotFoundException;
 import br.com.gabrielromualdo.gestao_vagas.exceptions.UserNotFoundException;
@@ -11,6 +12,8 @@ import br.com.gabrielromualdo.gestao_vagas.modules.candidate.entity.ApplyJobEnti
 import br.com.gabrielromualdo.gestao_vagas.modules.candidate.repository.ApplyJobRepository;
 import br.com.gabrielromualdo.gestao_vagas.modules.company.repositories.JobRepository;
 
+
+@Service
 public class ApplyJobCandidateUseCase {
     
 

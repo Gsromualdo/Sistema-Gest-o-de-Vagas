@@ -39,7 +39,6 @@ public class ApplyJobCandidateUseCaseTest {
     @Mock
     private ApplyJobRepository applyJobRepository;
 
-
     @Test
     @DisplayName("Should not be able to apply job with candidate not found")
     public void should_not_be_able_to_apply_job_with_candidate_not_found() {
@@ -59,25 +58,28 @@ public class ApplyJobCandidateUseCaseTest {
 
         when(candidateRepository.findById(idCandidate)).thenReturn(Optional.of(candidate));
 
-        try{
-            applyJobCandidateUseCase.execute(idCandidate, null);
-        }catch(Exception e ){
-            assertThat(e).isInstanceOf(UserNotFoundException.class);
-        }
         
-    }   
+        var idJob = UUID.randomUUID();
+        when(jobRepository.findById(idJob)).thenReturn(Optional.empty());
+
+        
+        org.assertj.core.api.Assertions
+                .assertThatExceptionOfType(br.com.gabrielromualdo.gestao_vagas.exceptions.JobNotFoundException.class)
+                .isThrownBy(() -> applyJobCandidateUseCase.execute(idCandidate, idJob));
+
+    }
+
     @Test
     public void should_be_able_to_create_a_new_apply_job() {
         var idCandidate = UUID.randomUUID();
         var idJob = UUID.randomUUID();
 
         var applyJob = ApplyJobEntity.builder()
-        .candidateId(idCandidate)
-        .jobId(idJob).build();
+                .candidateId(idCandidate)
+                .jobId(idJob).build();
 
         var applyJobCreated = ApplyJobEntity.builder()
-        .id(UUID.randomUUID()).build();
-        
+                .id(UUID.randomUUID()).build();
 
         when(candidateRepository.findById(idCandidate)).thenReturn(Optional.of(new CandidateEntity()));
         when(jobRepository.findById(idJob)).thenReturn(Optional.of(new JobEntity()));
@@ -88,6 +90,6 @@ public class ApplyJobCandidateUseCaseTest {
 
         assertThat(result).hasFieldOrProperty("id");
         assertNotNull(result.getId());
-        
+
     }
 }

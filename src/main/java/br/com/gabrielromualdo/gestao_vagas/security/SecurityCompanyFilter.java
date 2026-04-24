@@ -16,11 +16,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Component
-public class SecurityFilter extends OncePerRequestFilter {
+public class SecurityCompanyFilter extends OncePerRequestFilter {
     // responsavel por verificar se o usuario esta autenticado
     private final JWTProvider JWTProvider;
 
-    SecurityFilter(JWTProvider JWTProvider) {
+    SecurityCompanyFilter(JWTProvider JWTProvider) {
         this.JWTProvider = JWTProvider;
     }
 
