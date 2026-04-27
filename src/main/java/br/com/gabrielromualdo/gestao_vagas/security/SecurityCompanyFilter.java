@@ -30,6 +30,11 @@ public class SecurityCompanyFilter extends OncePerRequestFilter {
             FilterChain filterChain)
             throws ServletException, IOException {
         //SecurityContextHolder.getContext().setAuthentication(null);
+
+        if(request.getRequestURI().startsWith("/actuator")){
+            filterChain.doFilter(request, response);
+            return;
+        }
         String header = request.getHeader("Authorization");
 
         if (request.getRequestURI().startsWith("/company")) {

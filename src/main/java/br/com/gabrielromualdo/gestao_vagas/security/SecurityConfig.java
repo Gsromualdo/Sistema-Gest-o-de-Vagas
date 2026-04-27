@@ -10,6 +10,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 //Reposnsavel para estabelecer as configurações de segurança
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.http.HttpMethod;
+
 @Configuration
 @EnableMethodSecurity
 public class SecurityConfig {
@@ -21,10 +23,11 @@ public class SecurityConfig {
     private SecurityCandidateFilter securityCandidateFilter;
 
 
-    private static final String[] SWAGGER_LIST = {
+    private static final String[] PERMIT_ALL_LIST = {
         "/v3/api-docs/**",
         "/swagger-ui/**",
-        "/swagger-ui.html"
+        "/swagger-ui.html",
+        "/actuator/**"
 
      };
 
@@ -33,11 +36,12 @@ public class SecurityConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
         .authorizeHttpRequests(auth ->{
-            auth.requestMatchers("/candidate/").permitAll()
+            auth.requestMatchers(HttpMethod.GET, "/actuator/**").permitAll()
+            .requestMatchers(PERMIT_ALL_LIST).permitAll()
             .requestMatchers("/company/").permitAll()
             .requestMatchers("/company/auth").permitAll()
             .requestMatchers("/candidate/auth").permitAll()
-            .requestMatchers(SWAGGER_LIST).permitAll();
+            .requestMatchers("/candidate/").permitAll();
             auth.anyRequest().authenticated();
         })
         .addFilterBefore(securityCandidateFilter, BasicAuthenticationFilter.class)

@@ -35,8 +35,7 @@ build/
 
 ### --- NOVAS ADIÇÕES --- ###
 
-# Segurança: O arquivo de propriedades onde ficam suas senhas e Secret JWT
-src/main/resources/application.properties
+
 .env
 .env.local
 

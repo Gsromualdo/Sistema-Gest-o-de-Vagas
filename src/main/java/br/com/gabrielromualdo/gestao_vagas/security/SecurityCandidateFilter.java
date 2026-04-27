@@ -30,6 +30,11 @@ public class SecurityCandidateFilter extends OncePerRequestFilter {
         //SecurityContextHolder.getContext().setAuthentication(null);
         String header = request.getHeader("Authorization");
 
+        if(request.getRequestURI().startsWith("/actuator")){
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         if (request.getRequestURI().startsWith("/candidate")) {
             if (header != null) {
                 var token = this.jwtCandidateProvider.validateToken(header);
