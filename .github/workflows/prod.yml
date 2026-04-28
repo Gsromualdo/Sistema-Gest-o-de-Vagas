@@ -1,44 +1,56 @@
 name: Gestao de vagas application
 
 on:
-  push:
-    branches: [main]
+    push:
+        branches: [ main ]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
 
-      - name: Setup Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: '17'
-          cache: 'maven' # Adicionado para acelerar os próximos builds
+            - name: Setup Java
+              uses: actions/setup-java@v4
+              with:
+                  distribution: temurin
+                  java-version: "17"
+                  cache: "maven" # Adicionado para acelerar os próximos builds
 
-      - name: Build project
-        run: mvn clean install
+            - name: Build project
+              run: mvn clean install
 
-      - name: Login docker
-        # É boa prática usar IF para não tentar logar se o build do Maven falhar
-        if: success()
-        run: docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKER_PASSWORD}}
+            - name: Login docker
+              # É boa prática usar IF para não tentar logar se o build do Maven falhar
+              if: success()
+              run: docker login -u ${{secrets.DOCKER_USERNAME}} -p
+                  ${{secrets.DOCKER_PASSWORD}}
 
-      - name: Build docker image
-        if: success()
-        run: docker build -t gsromualdo/gestao_vagas .
+            - name: Build docker image
+              if: success()
+              run: docker build -t gsromualdo/gestao_vagas .
 
-      - name: Publish image
-        if: success()
-        run: docker push gsromualdo/gestao_vagas
+            - name: Publish image
+              if: success()
+              run: docker push gsromualdo/gestao_vagas
 
-      - name: Upload Test Results
-        # O if: failure() garante que se o 'Build project' falhar por causa de testes,
-        # você consiga baixar os relatórios para entender o motivo.
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: reports
-          path: target/surefire-reports/
+            - name: Upload Test Results
+              # O if: failure() garante que se o 'Build project' falhar por causa de testes,
+              # você consiga baixar os relatórios para entender o motivo.
+              if: failure()
+              uses: actions/upload-artifact@v4
+              with:
+                  name: reports
+                  path: target/surefire-reports/
+    deploy:
+        needs: build
+        runs-on: self-hosted
+        steps:
+            - name: pull image docker hub
+              run: docker pull docker push gsromualdo/gestao_vagas:latest
+            - name: remove container
+              run: docker rm -f 
+            - name: Run docker container gestao-vagas
+              run: docker run -d -p 8080:8080 -e DATABASE_URL=${{secrets.DATABASE_URL}} -e DATABASE_PASSWORD=${{secrets.DATABASE_PASSWORD}} - DATABASE_USERNAME=${{secrets.DATABASE_USERNAME}} --name gestao-vagas gsromualdo/gestao_vagas
+             
