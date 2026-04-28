@@ -1,26 +1,44 @@
 name: Gestao de vagas application
 
 on:
-    push:
-        branches: [main]
+  push:
+    branches: [main]
 
 jobs:
-    build:
-        runs-on: ubuntu-latest
-        steps:
-            - name: Chckout code
-              uses: actions/checkout@v3
-            - name: Setup Java
-              uses: actions/setup-java@v3
-              with:
-                distribution: temurin
-                java-version: '17'
-            - name: Build project
-              run: mvn clean install
-            - name: Login docker
-              run: docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKER_PASSWORD}}
-            - name: Build docker image
-              run: docker build -t gsromualdo/gestao_vagas .
-            - name: Publish image
-              run: docker push gsromualdo/gestao_vagas
-              
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: 'maven' # Adicionado para acelerar os próximos builds
+
+      - name: Build project
+        run: mvn clean install
+
+      - name: Login docker
+        # É boa prática usar IF para não tentar logar se o build do Maven falhar
+        if: success()
+        run: docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKER_PASSWORD}}
+
+      - name: Build docker image
+        if: success()
+        run: docker build -t gsromualdo/gestao_vagas .
+
+      - name: Publish image
+        if: success()
+        run: docker push gsromualdo/gestao_vagas
+
+      - name: Upload Test Results
+        # O if: failure() garante que se o 'Build project' falhar por causa de testes,
+        # você consiga baixar os relatórios para entender o motivo.
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: reports
+          path: target/surefire-reports/
