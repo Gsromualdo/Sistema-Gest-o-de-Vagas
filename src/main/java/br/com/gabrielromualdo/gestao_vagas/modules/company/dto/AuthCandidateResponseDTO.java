@@ -2,6 +2,10 @@ package br.com.gabrielromualdo.gestao_vagas.modules.company.dto;
 
 
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,6 +17,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AuthCandidateResponseDTO {
+    @JsonProperty("access_token")
     private String access_token;
-    private Long expires_in;    
+    @JsonProperty("expires_in")
+    private Long expires_in;
+    @JsonProperty("roles")
+    private List<String> roles;    
 }
