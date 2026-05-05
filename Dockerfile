@@ -6,13 +6,12 @@ RUN mvn clean package -DskipTests
 
 # Estágio de Runtime (Otimizado)
 FROM eclipse-temurin:17-jre-alpine
-
 WORKDIR /app
 
-# Copia apenas o JAR final do estágio de build
-COPY --from=build /target/*.jar app.jar
+# CORREÇÃO: O caminho agora reflete o WORKDIR /app do estágio anterior
+COPY --from=build /app/target/*.jar app.jar
 
 EXPOSE 8080
 
-# Adicionamos flags de memória para ajudar o Java a respeitar o limite do container
+# Limita o uso de memória para evitar o OOM-kill na sua instância de 1GB
 ENTRYPOINT ["java", "-Xmx512M", "-jar", "app.jar"]
