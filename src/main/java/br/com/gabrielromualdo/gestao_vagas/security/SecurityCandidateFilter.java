@@ -52,7 +52,7 @@ public class SecurityCandidateFilter extends OncePerRequestFilter {
                     role -> new SimpleGrantedAuthority("ROLE_" + role.toString().toUpperCase()))
                     .toList();
                 UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(token.getSubject(),
-                grants);
+                null ,grants);
                 SecurityContextHolder.getContext().setAuthentication(auth);
                 
                 
