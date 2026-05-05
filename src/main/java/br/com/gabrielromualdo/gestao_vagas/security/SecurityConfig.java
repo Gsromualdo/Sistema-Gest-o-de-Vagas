@@ -7,7 +7,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-//Reposnsavel para estabelecer as configurações de segurança
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.http.HttpMethod;
@@ -22,31 +21,29 @@ public class SecurityConfig {
     @Autowired
     private SecurityCandidateFilter securityCandidateFilter;
 
-
     private static final String[] PERMIT_ALL_LIST = {
         "/v3/api-docs/**",
         "/swagger-ui/**",
         "/swagger-ui.html",
         "/actuator/**"
+    };
 
-     };
-
-    //indicar que um metodo dentro da classe configuration esta sendo utilizado para definir algum objeto ja gerenciado pelo spring
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
-        .authorizeHttpRequests(auth ->{
+        .authorizeHttpRequests(auth -> {
             auth.requestMatchers(HttpMethod.GET, "/actuator/**").permitAll()
             .requestMatchers(PERMIT_ALL_LIST).permitAll()
-            .requestMatchers("/company/").permitAll()
             .requestMatchers("/company/auth").permitAll()
             .requestMatchers("/candidate/auth").permitAll()
-            .requestMatchers("/candidate/").permitAll();
+            .requestMatchers(HttpMethod.POST, "/company/").permitAll()
+            .requestMatchers(HttpMethod.POST, "/candidate/").permitAll();
+
+            
             auth.anyRequest().authenticated();
         })
         .addFilterBefore(securityCandidateFilter, BasicAuthenticationFilter.class)
         .addFilterBefore(securityCompanyFilter, BasicAuthenticationFilter.class);
-        
         
         return http.build();
     }
