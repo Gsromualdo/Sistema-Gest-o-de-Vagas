@@ -1,6 +1,4 @@
 package br.com.gabrielromualdo.gestao_vagas.modules.company.Controllers;
-
-import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
